@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "53fe6ccf-b5e4-4296-9604-af43798a0864",
+		"name": "Devops IA-2 Timepass",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44221724",
+		"_collection_link": "https://ak-2584920.postman.co/workspace/AK's-Workspace~9c8cd797-7bd4-4914-8e5d-4edb05c56988/collection/44221724-53fe6ccf-b5e4-4296-9604-af43798a0864?action=share&source=collection_link&creator=44221724"
+	},
+	"item": [
+		{
+			"name": "Health-Check",
+			"item": [
+				{
+					"name": "Api-Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Prediction-API",
+			"item": [
+				{
+					"name": "single-prediction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Type\": \"DEBIT\",\r\n    \"Days for shipping (real)\": 3,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": 91.25,\r\n    \"Sales per customer\": 314.64,\r\n    \"Category Id\": 73,\r\n    \"Department Id\": 10,\r\n    \"Order Item Discount\": 0.0,\r\n    \"Order Item Product Price\": 327.75,\r\n    \"Order Item Profit Ratio\": 0.28,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 327.75,\r\n    \"Order Item Total\": 327.75,\r\n    \"Order Profit Per Order\": 91.25,\r\n    \"Product Category Id\": 73,\r\n    \"Product Price\": 327.75,\r\n    \"shipping date (DateOrders)\": \"2/3/2018 22:56\",\r\n    \"order date (DateOrders)\": \"2/1/2018 10:30\",\r\n    \"Shipping Mode\": \"Standard Class\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/predict",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"predict"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "multiple-prediction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"Type\": \"DEBIT\",\r\n    \"Days for shipping (real)\": 2,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": 100.5,\r\n    \"Sales per customer\": 350.25,\r\n    \"Category Id\": 73,\r\n    \"Department Id\": 10,\r\n    \"Order Item Discount\": 0.0,\r\n    \"Order Item Product Price\": 400.0,\r\n    \"Order Item Profit Ratio\": 0.25,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 400.0,\r\n    \"Order Item Total\": 400.0,\r\n    \"Order Profit Per Order\": 100.5,\r\n    \"Product Category Id\": 73,\r\n    \"Product Price\": 400.0,\r\n    \"shipping date (DateOrders)\": \"2/5/2018 14:30\",\r\n    \"order date (DateOrders)\": \"2/3/2018 10:00\",\r\n    \"Shipping Mode\": \"Same Day\"\r\n  },\r\n  {\r\n    \"Type\": \"CASH\",\r\n    \"Days for shipping (real)\": 3,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": 85.75,\r\n    \"Sales per customer\": 320.5,\r\n    \"Category Id\": 15,\r\n    \"Department Id\": 5,\r\n    \"Order Item Discount\": 5.0,\r\n    \"Order Item Product Price\": 250.0,\r\n    \"Order Item Profit Ratio\": 0.3,\r\n    \"Order Item Quantity\": 2,\r\n    \"Sales\": 500.0,\r\n    \"Order Item Total\": 500.0,\r\n    \"Order Profit Per Order\": 85.75,\r\n    \"Product Category Id\": 15,\r\n    \"Product Price\": 250.0,\r\n    \"shipping date (DateOrders)\": \"2/6/2018 16:45\",\r\n    \"order date (DateOrders)\": \"2/3/2018 09:15\",\r\n    \"Shipping Mode\": \"First Class\"\r\n  },\r\n  {\r\n    \"Type\": \"DEBIT\",\r\n    \"Days for shipping (real)\": 4,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": 50.25,\r\n    \"Sales per customer\": 280.0,\r\n    \"Category Id\": 42,\r\n    \"Department Id\": 8,\r\n    \"Order Item Discount\": 0.0,\r\n    \"Order Item Product Price\": 150.0,\r\n    \"Order Item Profit Ratio\": 0.2,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 150.0,\r\n    \"Order Item Total\": 150.0,\r\n    \"Order Profit Per Order\": 50.25,\r\n    \"Product Category Id\": 42,\r\n    \"Product Price\": 150.0,\r\n    \"shipping date (DateOrders)\": \"2/7/2018 11:20\",\r\n    \"order date (DateOrders)\": \"2/3/2018 08:30\",\r\n    \"Shipping Mode\": \"Second Class\"\r\n  },\r\n  {\r\n    \"Type\": \"TRANSFER\",\r\n    \"Days for shipping (real)\": 5,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": -100.0,\r\n    \"Sales per customer\": 290.0,\r\n    \"Category Id\": 73,\r\n    \"Department Id\": 10,\r\n    \"Order Item Discount\": 10.0,\r\n    \"Order Item Product Price\": 300.0,\r\n    \"Order Item Profit Ratio\": 0.15,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 300.0,\r\n    \"Order Item Total\": 300.0,\r\n    \"Order Profit Per Order\": -100.0,\r\n    \"Product Category Id\": 73,\r\n    \"Product Price\": 300.0,\r\n    \"shipping date (DateOrders)\": \"2/8/2018 18:00\",\r\n    \"order date (DateOrders)\": \"2/3/2018 12:00\",\r\n    \"Shipping Mode\": \"Standard Class\"\r\n  },\r\n  {\r\n    \"Type\": \"TRANSFER\",\r\n    \"Days for shipping (real)\": 6,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": -150.5,\r\n    \"Sales per customer\": 310.75,\r\n    \"Category Id\": 25,\r\n    \"Department Id\": 7,\r\n    \"Order Item Discount\": 15.0,\r\n    \"Order Item Product Price\": 450.0,\r\n    \"Order Item Profit Ratio\": 0.1,\r\n    \"Order Item Quantity\": 3,\r\n    \"Sales\": 1350.0,\r\n    \"Order Item Total\": 1350.0,\r\n    \"Order Profit Per Order\": -150.5,\r\n    \"Product Category Id\": 25,\r\n    \"Product Price\": 450.0,\r\n    \"shipping date (DateOrders)\": \"2/9/2018 20:30\",\r\n    \"order date (DateOrders)\": \"2/3/2018 14:45\",\r\n    \"Shipping Mode\": \"Standard Class\"\r\n  },\r\n  {\r\n    \"Type\": \"PAYMENT\",\r\n    \"Days for shipping (real)\": 7,\r\n    \"Days for shipment (scheduled)\": 3,\r\n    \"Benefit per order\": -200.0,\r\n    \"Sales per customer\": 275.5,\r\n    \"Category Id\": 60,\r\n    \"Department Id\": 12,\r\n    \"Order Item Discount\": 20.0,\r\n    \"Order Item Product Price\": 200.0,\r\n    \"Order Item Profit Ratio\": 0.05,\r\n    \"Order Item Quantity\": 2,\r\n    \"Sales\": 400.0,\r\n    \"Order Item Total\": 400.0,\r\n    \"Order Profit Per Order\": -200.0,\r\n    \"Product Category Id\": 60,\r\n    \"Product Price\": 200.0,\r\n    \"shipping date (DateOrders)\": \"2/10/2018 22:15\",\r\n    \"order date (DateOrders)\": \"2/3/2018 16:20\",\r\n    \"Shipping Mode\": \"First Class\"\r\n  },\r\n  {\r\n    \"Type\": \"CASH\",\r\n    \"Days for shipping (real)\": 3,\r\n    \"Days for shipment (scheduled)\": 5,\r\n    \"Benefit per order\": 120.0,\r\n    \"Sales per customer\": 400.0,\r\n    \"Category Id\": 73,\r\n    \"Department Id\": 10,\r\n    \"Order Item Discount\": 0.0,\r\n    \"Order Item Product Price\": 500.0,\r\n    \"Order Item Profit Ratio\": 0.35,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 500.0,\r\n    \"Order Item Total\": 500.0,\r\n    \"Order Profit Per Order\": 120.0,\r\n    \"Product Category Id\": 73,\r\n    \"Product Price\": 500.0,\r\n    \"shipping date (DateOrders)\": \"2/6/2018 10:00\",\r\n    \"order date (DateOrders)\": \"2/3/2018 08:00\",\r\n    \"Shipping Mode\": \"Same Day\"\r\n  },\r\n  {\r\n    \"Type\": \"DEBIT\",\r\n    \"Days for shipping (real)\": 2,\r\n    \"Days for shipment (scheduled)\": 3,\r\n    \"Benefit per order\": 90.0,\r\n    \"Sales per customer\": 330.0,\r\n    \"Category Id\": 18,\r\n    \"Department Id\": 6,\r\n    \"Order Item Discount\": 2.5,\r\n    \"Order Item Product Price\": 180.0,\r\n    \"Order Item Profit Ratio\": 0.28,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 180.0,\r\n    \"Order Item Total\": 180.0,\r\n    \"Order Profit Per Order\": 90.0,\r\n    \"Product Category Id\": 18,\r\n    \"Product Price\": 180.0,\r\n    \"shipping date (DateOrders)\": \"2/5/2018 09:30\",\r\n    \"order date (DateOrders)\": \"2/3/2018 07:45\",\r\n    \"Shipping Mode\": \"First Class\"\r\n  },\r\n  {\r\n    \"Type\": \"TRANSFER\",\r\n    \"Days for shipping (real)\": 8,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": -250.0,\r\n    \"Sales per customer\": 265.0,\r\n    \"Category Id\": 50,\r\n    \"Department Id\": 9,\r\n    \"Order Item Discount\": 25.0,\r\n    \"Order Item Product Price\": 350.0,\r\n    \"Order Item Profit Ratio\": 0.08,\r\n    \"Order Item Quantity\": 2,\r\n    \"Sales\": 700.0,\r\n    \"Order Item Total\": 700.0,\r\n    \"Order Profit Per Order\": -250.0,\r\n    \"Product Category Id\": 50,\r\n    \"Product Price\": 350.0,\r\n    \"shipping date (DateOrders)\": \"2/11/2018 23:45\",\r\n    \"order date (DateOrders)\": \"2/3/2018 15:30\",\r\n    \"Shipping Mode\": \"Standard Class\"\r\n  },\r\n  {\r\n    \"Type\": \"CASH\",\r\n    \"Days for shipping (real)\": 4,\r\n    \"Days for shipment (scheduled)\": 5,\r\n    \"Benefit per order\": 75.5,\r\n    \"Sales per customer\": 295.25,\r\n    \"Category Id\": 30,\r\n    \"Department Id\": 11,\r\n    \"Order Item Discount\": 3.0,\r\n    \"Order Item Product Price\": 220.0,\r\n    \"Order Item Profit Ratio\": 0.22,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 220.0,\r\n    \"Order Item Total\": 220.0,\r\n    \"Order Profit Per Order\": 75.5,\r\n    \"Product Category Id\": 30,\r\n    \"Product Price\": 220.0,\r\n    \"shipping date (DateOrders)\": \"2/7/2018 13:15\",\r\n    \"order date (DateOrders)\": \"2/3/2018 11:00\",\r\n    \"Shipping Mode\": \"Second Class\"\r\n  }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/predict/batch",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"predict",
+								"batch"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Metrics",
+			"item": [
+				{
+					"name": "metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/metrics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": ""
+		}
+	]
+}
