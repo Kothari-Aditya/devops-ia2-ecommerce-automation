@@ -1,0 +1,11 @@
+Predicted_Late_Delivery_Risk,Probability_On_Time,Probability_Late_Delivery,Prediction_Label
+0,0.9999681,3.1885636e-05,On-Time Delivery
+0,0.99996084,3.914782e-05,On-Time Delivery
+0,0.9999375,6.255228e-05,On-Time Delivery
+1,0.06896663,0.9310334,Late Delivery Risk
+1,0.08844924,0.91155076,Late Delivery Risk
+1,0.00010693073,0.99989307,Late Delivery Risk
+0,0.99997133,2.8694854e-05,On-Time Delivery
+0,0.99986064,0.00013937693,On-Time Delivery
+1,0.23147666,0.76852334,Late Delivery Risk
+0,0.99979216,0.00020785694,On-Time Delivery
