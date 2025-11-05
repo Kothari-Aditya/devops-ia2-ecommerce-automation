@@ -257,9 +257,6 @@ def batch_predict():
                 'days_real': int(input_df.iloc[i].get('Days for shipping (real)')),
                 'days_scheduled': int(input_df.iloc[i].get('Days for shipment (scheduled)'))
             }
-            for key, value in prediction_data.items():
-                print(f"{key}: {value} (type: {type(value)})")
-
             save_prediction(prediction_data)
         
         print(f"[STORAGE] ✅ {num_predictions} predictions saved to storage")
@@ -319,6 +316,50 @@ def status():
         'total_predictions_served': prediction_count,
         'timestamp': datetime.now().isoformat()
     }), 200
+
+
+@app.route('/api/predictions/today', methods=['GET'])
+def get_today_predictions_api():
+    """
+    Get all predictions for today (for GitHub Actions)
+    """
+    try:
+        from src.predictions_store import get_predictions_by_date
+        today = datetime.now().strftime('%Y-%m-%d')
+        predictions = get_predictions_by_date(today)
+        
+        return jsonify({
+            'date': today,
+            'count': len(predictions),
+            'predictions': predictions
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/predictions/stats', methods=['GET'])
+def get_predictions_stats_api():
+    """
+    Get category statistics for today (for GitHub Actions)
+    """
+    try:
+        from src.predictions_store import get_predictions_by_date, get_category_statistics
+        today = datetime.now().strftime('%Y-%m-%d')
+        
+        all_preds = get_predictions_by_date(today)
+        stats = get_category_statistics(today)
+        
+        late_count = sum(1 for p in all_preds if p.get('prediction') == 1)
+        
+        return jsonify({
+            'date': today,
+            'total_predictions': len(all_preds),
+            'late_count': late_count,
+            'on_time_count': len(all_preds) - late_count,
+            'category_statistics': stats
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 # ========== ERROR HANDLERS ==========

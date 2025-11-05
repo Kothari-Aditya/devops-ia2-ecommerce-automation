@@ -1,0 +1,55 @@
+name: Daily Admin Report - Product Category Analysis
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # 11 PM UTC daily
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  generate-admin-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install pandas numpy python-dotenv requests
+      
+      - name: Fetch predictions from Railway API
+        run: |
+          mkdir -p data
+          # Fetch today's predictions from your Railway API
+          curl -o data/predictions_temp.json ${{ secrets.RAILWAY_API_URL }}/api/predictions/today
+          
+          # Transform to match local format (wrap in predictions array)
+          python -c "import json; d=json.load(open('data/predictions_temp.json')); json.dump({'predictions': d['predictions']}, open('data/predictions.json', 'w'))"
+        continue-on-error: true
+      
+      - name: Generate and send admin report
+        env:
+          MAILTRAP_HOST: ${{ secrets.MAILTRAP_HOST }}
+          MAILTRAP_PORT: ${{ secrets.MAILTRAP_PORT }}
+          MAILTRAP_USERNAME: ${{ secrets.MAILTRAP_USERNAME }}
+          MAILTRAP_PASSWORD: ${{ secrets.MAILTRAP_PASSWORD }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: "E-Commerce Delivery Alert"
+        run: |
+          python scripts/generate_admin_report.py
+      
+      - name: Upload report logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: admin-report-${{ github.run_number }}
+          path: |
+            logs/
+            data/predictions.json
+          if-no-files-found: ignore
