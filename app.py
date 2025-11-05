@@ -388,7 +388,10 @@ if __name__ == '__main__':
     print("🚀 DELIVERY RISK PREDICTION API v2.0 - DEVOPS PIPELINE")
     print("="*70)
     print(f"Server starting at: {datetime.now().isoformat()}")
-    print("API Documentation: http://localhost:5000/")
+    
+    # Get port from environment (Railway compatibility)
+    port = int(os.getenv('PORT', 5000))
+    print(f"API Documentation: http://localhost:{port}/")
     print("\nEndpoints:")
     print("  • GET  /                    - API Info")
     print("  • GET  /health              - Health Check")
@@ -396,6 +399,8 @@ if __name__ == '__main__':
     print("  • POST /predict/batch       - Batch Prediction + Storage")
     print("  • GET  /metrics             - Prediction Metrics")
     print("  • GET  /status              - API Status")
+    print("  • GET  /api/predictions/today   - Get Today's Predictions")
+    print("  • GET  /api/predictions/stats   - Get Category Statistics")
     print("\n✨ Features:")
     print("  • AI: 97.4% accurate delivery delay predictions")
     print("  • DevOps: Prediction storage for batch processing")
@@ -403,4 +408,4 @@ if __name__ == '__main__':
     print("="*70 + "\n")
     
     # Run with debug mode off for production
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)

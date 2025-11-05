@@ -1,0 +1,112 @@
+name: Daily Admin Report - Railway Integration
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # 11 PM UTC daily
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  generate-admin-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install pandas numpy python-dotenv requests
+      
+      - name: Create data directory
+        run: mkdir -p data
+      
+      - name: Fetch predictions from Railway API
+        id: fetch_predictions
+        run: |
+          echo "Fetching predictions from Railway..."
+          
+          # Fetch today's predictions from Railway API
+          HTTP_CODE=$(curl -s -o data/railway_response.json -w "%{http_code}" \
+            "${{ secrets.RAILWAY_API_URL }}/api/predictions/today")
+          
+          echo "HTTP Response Code: $HTTP_CODE"
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ Successfully fetched predictions from Railway"
+            
+            # Transform to match local storage format
+            python3 << 'PYTHON_EOF'
+          import json
+          
+          # Load Railway API response
+          with open('data/railway_response.json', 'r') as f:
+              railway_data = json.load(f)
+          
+          # Transform to local format (wrap in predictions array)
+          local_format = {
+              'predictions': railway_data.get('predictions', [])
+          }
+          
+          # Save in local format
+          with open('data/predictions.json', 'w') as f:
+              json.dump(local_format, f, indent=2)
+          
+          print(f"Transformed {len(local_format['predictions'])} predictions")
+          PYTHON_EOF
+            
+            echo "predictions_count=$(cat data/predictions.json | python3 -c 'import json, sys; print(len(json.load(sys.stdin)["predictions"]))')" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed to fetch predictions from Railway (HTTP $HTTP_CODE)"
+            echo "Creating empty predictions file..."
+            echo '{"predictions": []}' > data/predictions.json
+            echo "predictions_count=0" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: false
+      
+      - name: Display predictions info
+        run: |
+          echo "Predictions fetched: ${{ steps.fetch_predictions.outputs.predictions_count }}"
+          
+          if [ -f data/predictions.json ]; then
+            echo "Sample of predictions.json:"
+            head -20 data/predictions.json
+          fi
+      
+      - name: Generate and send admin report
+        if: steps.fetch_predictions.outputs.predictions_count > 0
+        env:
+          MAILTRAP_HOST: ${{ secrets.MAILTRAP_HOST }}
+          MAILTRAP_PORT: ${{ secrets.MAILTRAP_PORT }}
+          MAILTRAP_USERNAME: ${{ secrets.MAILTRAP_USERNAME }}
+          MAILTRAP_PASSWORD: ${{ secrets.MAILTRAP_PASSWORD }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: "E-Commerce Delivery Alert"
+        run: |
+          echo "Generating admin report..."
+          python scripts/generate_admin_report.py
+      
+      - name: No predictions warning
+        if: steps.fetch_predictions.outputs.predictions_count == 0
+        run: |
+          echo "⚠️  No predictions found for today. Skipping report generation."
+          echo "This could mean:"
+          echo "  1. No predictions were made today"
+          echo "  2. Railway API is unreachable"
+          echo "  3. Railway instance restarted and lost data"
+      
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: admin-report-${{ github.run_number }}
+          path: |
+            data/predictions.json
+            data/railway_response.json
+          if-no-files-found: ignore
+          retention-days: 7
