@@ -46,7 +46,7 @@ jobs:
       
       - name: Upload report logs
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: admin-report-${{ github.run_number }}
           path: |
