@@ -25,3 +25,4 @@ threadpoolctl
 Werkzeug
 wheel
 xgboost
+gunicorn
