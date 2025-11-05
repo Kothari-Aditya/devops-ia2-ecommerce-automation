@@ -1,6 +1,7 @@
 """
 Flask API for Delivery Risk Prediction
 Serves ML predictions as REST API endpoints
+Stores predictions for later batch processing (DevOps Pipeline)
 """
 
 from flask import Flask, request, jsonify
@@ -15,6 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
 from src.model_trainer import load_model, load_scaler, load_encoder, load_ordinal_encoder
 from src.predictor import preprocess_new_data, predict
+from src.predictions_store import save_prediction  # NEW: Storage function
 
 app = Flask(__name__)
 
@@ -42,11 +44,18 @@ def home():
     """Health check and API info"""
     return jsonify({
         'status': 'active',
-        'message': 'Delivery Risk Prediction API v1.0',
+        'message': 'Delivery Risk Prediction API v2.0 - DevOps Pipeline Ready',
+        'features': [
+            'AI-powered late delivery prediction',
+            'Prediction storage for batch processing',
+            'DevOps pipeline integration'
+        ],
         'endpoints': {
             'health': '/health',
             'predict': '/predict (POST)',
-            'metrics': '/metrics'
+            'predict_batch': '/predict/batch (POST)',
+            'metrics': '/metrics',
+            'status': '/status'
         }
     })
 
@@ -65,9 +74,9 @@ def health():
 @app.route('/predict', methods=['POST'])
 def predict_endpoint():
     """
-    Main prediction endpoint
+    Main prediction endpoint - ONLY predicts and stores
     Accepts JSON with delivery/order features
-    Returns delivery risk prediction and probabilities
+    Returns delivery risk prediction and saves to storage
     """
     global prediction_count, delay_count
     
@@ -94,6 +103,9 @@ def predict_endpoint():
                 'error': f'Missing required columns: {missing_cols}',
                 'required_columns': required_cols
             }), 400
+        
+        # Extract customer_email BEFORE preprocessing (not a model feature)
+        customer_email = data.pop('customer_email', None)
         
         # Create DataFrame from input
         input_df = pd.DataFrame([data])
@@ -129,11 +141,30 @@ def predict_endpoint():
             'probability_late_delivery': round(prob_late, 4),
             'confidence': round(max(prob_ontime, prob_late), 4),
             'timestamp': datetime.now().isoformat(),
-            'model_version': '1.0'
+            'model_version': '2.0'
         }
         
         print(f"[PREDICT] ✅ Prediction: {status}")
         print(f"[PREDICT] Probabilities - On-Time: {prob_ontime:.2%}, Late: {prob_late:.2%}")
+        
+        # ========== PHASE 1: STORE PREDICTION (NO EMAIL) ==========
+        # Save prediction to storage for later batch processing
+        prediction_data = {
+            'timestamp': datetime.now().isoformat(),
+            'prediction': int(prediction_value),
+            'probability_late': round(prob_late, 4),
+            'product_category_id': data.get('Product Category Id'),
+            'customer_email': customer_email,
+            'shipping_mode': data.get('Shipping Mode'),
+            'days_real': data.get('Days for shipping (real)'),
+            'days_scheduled': data.get('Days for shipment (scheduled)')
+        }
+        
+        save_prediction(prediction_data)
+        print(f"[STORAGE] ✅ Prediction saved to storage")
+        
+        result['stored'] = True
+        result['storage_note'] = 'Prediction saved for batch processing'
         
         return jsonify(result), 200
     
@@ -148,9 +179,10 @@ def predict_endpoint():
 @app.route('/predict/batch', methods=['POST'])
 def batch_predict():
     """
-    Batch prediction endpoint
+    Batch prediction endpoint - ONLY predicts and stores
     Accepts CSV data via file upload or JSON array
     Returns predictions for multiple records
+    Saves all predictions to storage for later processing
     """
     global prediction_count, delay_count
     
@@ -180,6 +212,12 @@ def batch_predict():
         else:
             return jsonify({'error': 'Provide CSV file or JSON array'}), 400
         
+        # Extract customer emails before preprocessing (if present)
+        if 'customer_email' in input_df.columns:
+            customer_emails = input_df.pop('customer_email')
+        else:
+            customer_emails = pd.Series([None] * len(input_df))
+        
         # Preprocess all data
         print("[BATCH PREDICT] Preprocessing batch data...")
         X_new = preprocess_new_data(input_df, encoder, scaler, ord_encoder)
@@ -194,25 +232,47 @@ def batch_predict():
         prediction_count += num_predictions
         delay_count += num_late
         
-        # Prepare results
+        # Prepare results and save to storage
         results = []
         for i in range(len(predictions)):
-            results.append({
+            result_item = {
                 'record_id': i + 1,
                 'prediction': int(predictions[i]),
                 'status': 'Late Delivery Risk' if predictions[i] == 1 else 'On-Time Delivery',
                 'probability_on_time': round(float(probabilities[i][0]), 4),
                 'probability_late_delivery': round(float(probabilities[i][1]), 4),
                 'confidence': round(float(max(probabilities[i])), 4)
-            })
+            }
+            results.append(result_item)
+            
+            # ========== PHASE 1: STORE EACH PREDICTION ==========
+            # Save to storage for batch processing
+            prediction_data = {
+                'timestamp': datetime.now().isoformat(),
+                'prediction': int(predictions[i]),
+                'probability_late': round(float(probabilities[i][1]), 4),
+                'product_category_id': int(input_df.iloc[i].get('Product Category Id')),
+                'customer_email': customer_emails.iloc[i] if i < len(customer_emails) else None,
+                'shipping_mode': input_df.iloc[i].get('Shipping Mode'),
+                'days_real': int(input_df.iloc[i].get('Days for shipping (real)')),
+                'days_scheduled': int(input_df.iloc[i].get('Days for shipment (scheduled)'))
+            }
+            for key, value in prediction_data.items():
+                print(f"{key}: {value} (type: {type(value)})")
+
+            save_prediction(prediction_data)
+        
+        print(f"[STORAGE] ✅ {num_predictions} predictions saved to storage")
         
         response = {
-            'total_predictions': num_predictions,
-            'late_delivery_count': num_late,
-            'on_time_count': num_predictions - num_late,
+            'total_predictions': int(num_predictions),
+            'late_delivery_count': int(num_late),
+            'on_time_count': int(num_predictions - num_late),
             'late_delivery_rate': round(num_late / num_predictions, 4) if num_predictions > 0 else 0,
             'predictions': results,
-            'timestamp': datetime.now().isoformat()
+            'timestamp': datetime.now().isoformat(),
+            'stored': True,
+            'storage_note': 'All predictions saved for batch processing'
         }
         
         print(f"[BATCH PREDICT] ✅ Completed: {num_predictions} predictions")
@@ -247,9 +307,15 @@ def status():
     return jsonify({
         'api_status': 'running',
         'model_status': 'loaded' if model is not None else 'not_loaded',
-        'model_version': '1.0',
+        'model_version': '2.0',
         'model_type': 'XGBoost Classifier',
         'model_accuracy': '97.4%',
+        'features': {
+            'ai_prediction': True,
+            'prediction_storage': True,
+            'batch_processing': True,
+            'devops_pipeline_ready': True
+        },
         'total_predictions_served': prediction_count,
         'timestamp': datetime.now().isoformat()
     }), 200
@@ -278,18 +344,22 @@ def internal_error(error):
 if __name__ == '__main__':
     # Run Flask app
     print("\n" + "="*70)
-    print("🚀 DELIVERY RISK PREDICTION API - STARTING")
+    print("🚀 DELIVERY RISK PREDICTION API v2.0 - DEVOPS PIPELINE")
     print("="*70)
     print(f"Server starting at: {datetime.now().isoformat()}")
     print("API Documentation: http://localhost:5000/")
-    print("Endpoints:")
+    print("\nEndpoints:")
     print("  • GET  /                    - API Info")
     print("  • GET  /health              - Health Check")
-    print("  • POST /predict             - Single Prediction")
-    print("  • POST /predict/batch       - Batch Prediction")
+    print("  • POST /predict             - Single Prediction + Storage")
+    print("  • POST /predict/batch       - Batch Prediction + Storage")
     print("  • GET  /metrics             - Prediction Metrics")
     print("  • GET  /status              - API Status")
+    print("\n✨ Features:")
+    print("  • AI: 97.4% accurate delivery delay predictions")
+    print("  • DevOps: Prediction storage for batch processing")
+    print("  • Pipeline: Ready for GitHub Actions integration")
     print("="*70 + "\n")
     
     # Run with debug mode off for production
-    app.run(host='127.0.0.1', port=5000, debug=False, threaded=True)
+    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
