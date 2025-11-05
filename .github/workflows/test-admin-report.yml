@@ -1,0 +1,49 @@
+name: Test Admin Report - Local Data
+
+on:
+  workflow_dispatch:    # manual trigger in GitHub Actions UI
+
+jobs:
+  generate-admin-report-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas numpy python-dotenv requests
+
+      - name: Use static mock predictions JSON
+        run: |
+          mkdir -p data
+          # Assumes data/predictions.json pushed to repo already; this just lists it
+          ls -l data/predictions.json
+
+      - name: Generate and send admin report (test mode)
+        env:
+          MAILTRAP_HOST: ${{ secrets.MAILTRAP_HOST }}
+          MAILTRAP_PORT: ${{ secrets.MAILTRAP_PORT }}
+          MAILTRAP_USERNAME: ${{ secrets.MAILTRAP_USERNAME }}
+          MAILTRAP_PASSWORD: ${{ secrets.MAILTRAP_PASSWORD }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: "E-Commerce Delivery Alert"
+        run: |
+          python scripts/generate_admin_report.py
+
+      - name: Upload report logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-report-test-${{ github.run_number }}
+          path: |
+            logs/
+            data/predictions.json
+          if-no-files-found: ignore
