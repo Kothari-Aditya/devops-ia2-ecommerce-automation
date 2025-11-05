@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "53fe6ccf-b5e4-4296-9604-af43798a0864",
+		"name": "Devops IA-2 Timepass",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44221724",
+		"_collection_link": "https://ak-2584920.postman.co/workspace/AK's-Workspace~9c8cd797-7bd4-4914-8e5d-4edb05c56988/collection/44221724-53fe6ccf-b5e4-4296-9604-af43798a0864?action=share&source=collection_link&creator=44221724"
+	},
+	"item": [
+		{
+			"name": "Health-Check",
+			"item": [
+				{
+					"name": "Api-Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{deployed_url}}/",
+							"host": [
+								"{{deployed_url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API-Predictions",
+			"item": [
+				{
+					"name": "single-prediction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Type\": \"TRANSFER\",\r\n    \"Days for shipping (real)\": 5,\r\n    \"Days for shipment (scheduled)\": 4,\r\n    \"Benefit per order\": -100.0,\r\n    \"Sales per customer\": 290.0,\r\n    \"Category Id\": 73,\r\n    \"Department Id\": 10,\r\n    \"Order Item Discount\": 10.0,\r\n    \"Order Item Product Price\": 300.0,\r\n    \"Order Item Profit Ratio\": 0.15,\r\n    \"Order Item Quantity\": 1,\r\n    \"Sales\": 300.0,\r\n    \"Order Item Total\": 300.0,\r\n    \"Order Profit Per Order\": -100.0,\r\n    \"Product Category Id\": 73,\r\n    \"Product Price\": 300.0,\r\n    \"shipping date (DateOrders)\": \"2/8/2018 18:00\",\r\n    \"order date (DateOrders)\": \"2/3/2018 12:00\",\r\n    \"Shipping Mode\": \"Standard Class\",\r\n    \"customer_email\": \"thefool@sefirahcastle.com\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{deployed_url}}/predict",
+							"host": [
+								"{{deployed_url}}"
+							],
+							"path": [
+								"predict"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "multiple-prediction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  { \"Type\": \"PAYMENT\", \"Days for shipping (real)\": 1, \"Days for shipment (scheduled)\": 2, \"Benefit per order\": 77.5, \"Sales per customer\": 310.0, \"Category Id\": 21, \"Department Id\": 4, \"Order Item Discount\": 2.0, \"Order Item Product Price\": 180.0, \"Order Item Profit Ratio\": 0.18, \"Order Item Quantity\": 2, \"Sales\": 360.0, \"Order Item Total\": 360.0, \"Order Profit Per Order\": 77.5, \"Product Category Id\": 21, \"Product Price\": 180.0, \"shipping date (DateOrders)\": \"2/4/2018 12:30\", \"order date (DateOrders)\": \"2/3/2018 09:50\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"sara.patel@example.com\" },\r\n  { \"Type\": \"CASH\", \"Days for shipping (real)\": 2, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": 95.0, \"Sales per customer\": 325.0, \"Category Id\": 34, \"Department Id\": 7, \"Order Item Discount\": 0.0, \"Order Item Product Price\": 270.0, \"Order Item Profit Ratio\": 0.22, \"Order Item Quantity\": 1, \"Sales\": 270.0, \"Order Item Total\": 270.0, \"Order Profit Per Order\": 95.0, \"Product Category Id\": 34, \"Product Price\": 270.0, \"shipping date (DateOrders)\": \"2/7/2018 14:45\", \"order date (DateOrders)\": \"2/5/2018 09:00\", \"Shipping Mode\": \"Same Day\", \"customer_email\": \"lucy.fern@example.com\" },\r\n  { \"Type\": \"DEBIT\", \"Days for shipping (real)\": 3, \"Days for shipment (scheduled)\": 4, \"Benefit per order\": 105.8, \"Sales per customer\": 410.5, \"Category Id\": 63, \"Department Id\": 3, \"Order Item Discount\": 6.5, \"Order Item Product Price\": 220.0, \"Order Item Profit Ratio\": 0.35, \"Order Item Quantity\": 2, \"Sales\": 440.0, \"Order Item Total\": 440.0, \"Order Profit Per Order\": 105.8, \"Product Category Id\": 63, \"Product Price\": 220.0, \"shipping date (DateOrders)\": \"2/6/2018 16:10\", \"order date (DateOrders)\": \"2/3/2018 10:15\", \"Shipping Mode\": \"Standard Class\", \"customer_email\": \"omar.kahn@example.com\" },\r\n  { \"Type\": \"TRANSFER\", \"Days for shipping (real)\": 4, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": -65.0, \"Sales per customer\": 285.5, \"Category Id\": 44, \"Department Id\": 6, \"Order Item Discount\": 12.0, \"Order Item Product Price\": 350.0, \"Order Item Profit Ratio\": 0.14, \"Order Item Quantity\": 1, \"Sales\": 350.0, \"Order Item Total\": 350.0, \"Order Profit Per Order\": -65.0, \"Product Category Id\": 44, \"Product Price\": 350.0, \"shipping date (DateOrders)\": \"2/9/2018 18:00\", \"order date (DateOrders)\": \"2/4/2018 13:20\", \"Shipping Mode\": \"Second Class\", \"customer_email\": \"hugo.west@example.com\" },\r\n  { \"Type\": \"PAYMENT\", \"Days for shipping (real)\": 3, \"Days for shipment (scheduled)\": 3, \"Benefit per order\": -110.0, \"Sales per customer\": 256.0, \"Category Id\": 52, \"Department Id\": 11, \"Order Item Discount\": 18.0, \"Order Item Product Price\": 200.0, \"Order Item Profit Ratio\": 0.09, \"Order Item Quantity\": 2, \"Sales\": 400.0, \"Order Item Total\": 400.0, \"Order Profit Per Order\": -110.0, \"Product Category Id\": 52, \"Product Price\": 200.0, \"shipping date (DateOrders)\": \"2/6/2018 11:30\", \"order date (DateOrders)\": \"2/3/2018 14:10\", \"Shipping Mode\": \"Same Day\", \"customer_email\": \"nina.singh@example.com\" },\r\n  { \"Type\": \"DEBIT\", \"Days for shipping (real)\": 5, \"Days for shipment (scheduled)\": 4, \"Benefit per order\": 58.2, \"Sales per customer\": 390.0, \"Category Id\": 26, \"Department Id\": 2, \"Order Item Discount\": 3.0, \"Order Item Product Price\": 195.0, \"Order Item Profit Ratio\": 0.19, \"Order Item Quantity\": 2, \"Sales\": 390.0, \"Order Item Total\": 390.0, \"Order Profit Per Order\": 58.2, \"Product Category Id\": 26, \"Product Price\": 195.0, \"shipping date (DateOrders)\": \"2/8/2018 19:35\", \"order date (DateOrders)\": \"2/3/2018 07:30\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"george.lee@example.com\" },\r\n  { \"Type\": \"CASH\", \"Days for shipping (real)\": 1, \"Days for shipment (scheduled)\": 2, \"Benefit per order\": 130.0, \"Sales per customer\": 520.0, \"Category Id\": 31, \"Department Id\": 9, \"Order Item Discount\": 0.0, \"Order Item Product Price\": 520.0, \"Order Item Profit Ratio\": 0.25, \"Order Item Quantity\": 1, \"Sales\": 520.0, \"Order Item Total\": 520.0, \"Order Profit Per Order\": 130.0, \"Product Category Id\": 31, \"Product Price\": 520.0, \"shipping date (DateOrders)\": \"2/5/2018 10:45\", \"order date (DateOrders)\": \"2/3/2018 11:10\", \"Shipping Mode\": \"Same Day\", \"customer_email\": \"erik.dunn@example.com\" },\r\n  { \"Type\": \"DEBIT\", \"Days for shipping (real)\": 6, \"Days for shipment (scheduled)\": 4, \"Benefit per order\": 69.5, \"Sales per customer\": 120.0, \"Category Id\": 38, \"Department Id\": 5, \"Order Item Discount\": 0.0, \"Order Item Product Price\": 120.0, \"Order Item Profit Ratio\": 0.58, \"Order Item Quantity\": 1, \"Sales\": 120.0, \"Order Item Total\": 120.0, \"Order Profit Per Order\": 69.5, \"Product Category Id\": 38, \"Product Price\": 120.0, \"shipping date (DateOrders)\": \"2/7/2018 15:00\", \"order date (DateOrders)\": \"2/3/2018 14:00\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"katie.morrison@example.com\" },\r\n  { \"Type\": \"TRANSFER\", \"Days for shipping (real)\": 7, \"Days for shipment (scheduled)\": 4, \"Benefit per order\": -90.0, \"Sales per customer\": 260.0, \"Category Id\": 60, \"Department Id\": 12, \"Order Item Discount\": 7.0, \"Order Item Product Price\": 145.0, \"Order Item Profit Ratio\": 0.09, \"Order Item Quantity\": 2, \"Sales\": 290.0, \"Order Item Total\": 290.0, \"Order Profit Per Order\": -90.0, \"Product Category Id\": 60, \"Product Price\": 145.0, \"shipping date (DateOrders)\": \"2/10/2018 22:00\", \"order date (DateOrders)\": \"2/3/2018 16:40\", \"Shipping Mode\": \"Second Class\", \"customer_email\": \"vinay.gupta@example.com\" },\r\n  { \"Type\": \"CASH\", \"Days for shipping (real)\": 2, \"Days for shipment (scheduled)\": 2, \"Benefit per order\": 82.0, \"Sales per customer\": 350.0, \"Category Id\": 10, \"Department Id\": 4, \"Order Item Discount\": 2.0, \"Order Item Product Price\": 175.0, \"Order Item Profit Ratio\": 0.23, \"Order Item Quantity\": 2, \"Sales\": 350.0, \"Order Item Total\": 350.0, \"Order Profit Per Order\": 82.0, \"Product Category Id\": 10, \"Product Price\": 175.0, \"shipping date (DateOrders)\": \"2/6/2018 12:30\", \"order date (DateOrders)\": \"2/3/2018 14:30\", \"Shipping Mode\": \"Standard Class\", \"customer_email\": \"priya.mehta@example.com\" },\r\n  { \"Type\": \"DEBIT\", \"Days for shipping (real)\": 3, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": 62.5, \"Sales per customer\": 250.0, \"Category Id\": 41, \"Department Id\": 7, \"Order Item Discount\": 5.0, \"Order Item Product Price\": 125.0, \"Order Item Profit Ratio\": 0.25, \"Order Item Quantity\": 2, \"Sales\": 250.0, \"Order Item Total\": 250.0, \"Order Profit Per Order\": 62.5, \"Product Category Id\": 41, \"Product Price\": 125.0, \"shipping date (DateOrders)\": \"2/7/2018 17:00\", \"order date (DateOrders)\": \"2/3/2018 07:45\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"luke.spencer@example.com\" },\r\n  { \"Type\": \"TRANSFER\", \"Days for shipping (real)\": 4, \"Days for shipment (scheduled)\": 3, \"Benefit per order\": -120.0, \"Sales per customer\": 380.0, \"Category Id\": 53, \"Department Id\": 10, \"Order Item Discount\": 30.0, \"Order Item Product Price\": 190.0, \"Order Item Profit Ratio\": 0.15, \"Order Item Quantity\": 2, \"Sales\": 380.0, \"Order Item Total\": 380.0, \"Order Profit Per Order\": -120.0, \"Product Category Id\": 53, \"Product Price\": 190.0, \"shipping date (DateOrders)\": \"2/8/2018 10:45\", \"order date (DateOrders)\": \"2/3/2018 12:00\", \"Shipping Mode\": \"Same Day\", \"customer_email\": \"felix.hunt@example.com\" },\r\n  { \"Type\": \"PAYMENT\", \"Days for shipping (real)\": 1, \"Days for shipment (scheduled)\": 2, \"Benefit per order\": 110.0, \"Sales per customer\": 450.0, \"Category Id\": 13, \"Department Id\": 6, \"Order Item Discount\": 1.0, \"Order Item Product Price\": 225.0, \"Order Item Profit Ratio\": 0.20, \"Order Item Quantity\": 2, \"Sales\": 450.0, \"Order Item Total\": 450.0, \"Order Profit Per Order\": 110.0, \"Product Category Id\": 13, \"Product Price\": 225.0, \"shipping date (DateOrders)\": \"2/4/2018 09:15\", \"order date (DateOrders)\": \"2/3/2018 09:55\", \"Shipping Mode\": \"Second Class\", \"customer_email\": \"zoe.martin@example.com\" },\r\n  { \"Type\": \"DEBIT\", \"Days for shipping (real)\": 5, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": 93.5, \"Sales per customer\": 210.5, \"Category Id\": 14, \"Department Id\": 5, \"Order Item Discount\": 7.5, \"Order Item Product Price\": 105.0, \"Order Item Profit Ratio\": 0.43, \"Order Item Quantity\": 2, \"Sales\": 210.0, \"Order Item Total\": 210.0, \"Order Profit Per Order\": 93.5, \"Product Category Id\": 14, \"Product Price\": 105.0, \"shipping date (DateOrders)\": \"2/9/2018 21:00\", \"order date (DateOrders)\": \"2/3/2018 19:00\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"anna.wallace@example.com\" },\r\n  { \"Type\": \"CASH\", \"Days for shipping (real)\": 2, \"Days for shipment (scheduled)\": 3, \"Benefit per order\": 115.0, \"Sales per customer\": 325.0, \"Category Id\": 75, \"Department Id\": 10, \"Order Item Discount\": 0.0, \"Order Item Product Price\": 325.0, \"Order Item Profit Ratio\": 0.35, \"Order Item Quantity\": 1, \"Sales\": 325.0, \"Order Item Total\": 325.0, \"Order Profit Per Order\": 115.0, \"Product Category Id\": 75, \"Product Price\": 325.0, \"shipping date (DateOrders)\": \"2/5/2018 13:05\", \"order date (DateOrders)\": \"2/3/2018 13:10\", \"Shipping Mode\": \"Same Day\", \"customer_email\": \"noah.james@example.com\" },\r\n  { \"Type\": \"DEBIT\", \"Days for shipping (real)\": 3, \"Days for shipment (scheduled)\": 4, \"Benefit per order\": 78.0, \"Sales per customer\": 310.0, \"Category Id\": 28, \"Department Id\": 7, \"Order Item Discount\": 1.0, \"Order Item Product Price\": 155.0, \"Order Item Profit Ratio\": 0.25, \"Order Item Quantity\": 2, \"Sales\": 310.0, \"Order Item Total\": 310.0, \"Order Profit Per Order\": 78.0, \"Product Category Id\": 28, \"Product Price\": 155.0, \"shipping date (DateOrders)\": \"2/8/2018 20:30\", \"order date (DateOrders)\": \"2/3/2018 10:30\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"justin.owen@example.com\" },\r\n  { \"Type\": \"TRANSFER\", \"Days for shipping (real)\": 4, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": -145.0, \"Sales per customer\": 450.0, \"Category Id\": 18, \"Department Id\": 11, \"Order Item Discount\": 25.0, \"Order Item Product Price\": 225.0, \"Order Item Profit Ratio\": 0.11, \"Order Item Quantity\": 2, \"Sales\": 450.0, \"Order Item Total\": 450.0, \"Order Profit Per Order\": -145.0, \"Product Category Id\": 18, \"Product Price\": 225.0, \"shipping date (DateOrders)\": \"2/7/2018 21:00\", \"order date (DateOrders)\": \"2/3/2018 16:30\", \"Shipping Mode\": \"Standard Class\", \"customer_email\": \"mia.jordan@example.com\" },\r\n  { \"Type\": \"PAYMENT\", \"Days for shipping (real)\": 6, \"Days for shipment (scheduled)\": 3, \"Benefit per order\": -180.0, \"Sales per customer\": 325.0, \"Category Id\": 62, \"Department Id\": 8, \"Order Item Discount\": 32.0, \"Order Item Product Price\": 162.0, \"Order Item Profit Ratio\": 0.05, \"Order Item Quantity\": 2, \"Sales\": 324.0, \"Order Item Total\": 324.0, \"Order Profit Per Order\": -180.0, \"Product Category Id\": 62, \"Product Price\": 162.0, \"shipping date (DateOrders)\": \"2/11/2018 11:15\", \"order date (DateOrders)\": \"2/3/2018 20:20\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"jake.hansen@example.com\" },\r\n  { \"Type\": \"CASH\", \"Days for shipping (real)\": 1, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": 98.0, \"Sales per customer\": 410.0, \"Category Id\": 77, \"Department Id\": 13, \"Order Item Discount\": 0.0, \"Order Item Product Price\": 410.0, \"Order Item Profit Ratio\": 0.24, \"Order Item Quantity\": 1, \"Sales\": 410.0, \"Order Item Total\": 410.0, \"Order Profit Per Order\": 98.0, \"Product Category Id\": 77, \"Product Price\": 410.0, \"shipping date (DateOrders)\": \"2/6/2018 18:30\", \"order date (DateOrders)\": \"2/3/2018 17:30\", \"Shipping Mode\": \"Same Day\", \"customer_email\": \"ivy.turner@example.com\" },\r\n  { \"Type\": \"DEBIT\", \"Days for shipping (real)\": 2, \"Days for shipment (scheduled)\": 3, \"Benefit per order\": 82.5, \"Sales per customer\": 250.0, \"Category Id\": 36, \"Department Id\": 10, \"Order Item Discount\": 2.0, \"Order Item Product Price\": 125.0, \"Order Item Profit Ratio\": 0.33, \"Order Item Quantity\": 2, \"Sales\": 250.0, \"Order Item Total\": 250.0, \"Order Profit Per Order\": 82.5, \"Product Category Id\": 36, \"Product Price\": 125.0, \"shipping date (DateOrders)\": \"2/4/2018 09:50\", \"order date (DateOrders)\": \"2/3/2018 06:35\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"matthew.fox@example.com\" },\r\n  { \"Type\": \"TRANSFER\", \"Days for shipping (real)\": 5, \"Days for shipment (scheduled)\": 4, \"Benefit per order\": -160.0, \"Sales per customer\": 520.0, \"Category Id\": 19, \"Department Id\": 7, \"Order Item Discount\": 35.0, \"Order Item Product Price\": 260.0, \"Order Item Profit Ratio\": 0.10, \"Order Item Quantity\": 2, \"Sales\": 520.0, \"Order Item Total\": 520.0, \"Order Profit Per Order\": -160.0, \"Product Category Id\": 19, \"Product Price\": 260.0, \"shipping date (DateOrders)\": \"2/9/2018 10:15\", \"order date (DateOrders)\": \"2/3/2018 12:20\", \"Shipping Mode\": \"Standard Class\", \"customer_email\": \"claire.taylor@example.com\" },\r\n  { \"Type\": \"PAYMENT\", \"Days for shipping (real)\": 7, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": -190.0, \"Sales per customer\": 180.0, \"Category Id\": 73, \"Department Id\": 13, \"Order Item Discount\": 40.0, \"Order Item Product Price\": 90.0, \"Order Item Profit Ratio\": 0.04, \"Order Item Quantity\": 2, \"Sales\": 180.0, \"Order Item Total\": 180.0, \"Order Profit Per Order\": -190.0, \"Product Category Id\": 73, \"Product Price\": 90.0, \"shipping date (DateOrders)\": \"2/11/2018 20:15\", \"order date (DateOrders)\": \"2/3/2018 18:30\", \"Shipping Mode\": \"First Class\", \"customer_email\": \"lucas.white@example.com\" },\r\n  { \"Type\": \"CASH\", \"Days for shipping (real)\": 4, \"Days for shipment (scheduled)\": 5, \"Benefit per order\": 65.0, \"Sales per customer\": 295.0, \"Category Id\": 22, \"Department Id\": 11, \"Order Item Discount\": 3.0, \"Order Item Product Price\": 145.0, \"Order Item Profit Ratio\": 0.22, \"Order Item Quantity\": 2, \"Sales\": 290.0, \"Order Item Total\": 290.0, \"Order Profit Per Order\": 65.0, \"Product Category Id\": 22, \"Product Price\": 145.0, \"shipping date (DateOrders)\": \"2/7/2018 12:45\", \"order date (DateOrders)\": \"2/3/2018 11:20\", \"Shipping Mode\": \"Second Class\", \"customer_email\": \"emma.bailey@example.com\" }\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{deployed_url}}/predict/batch",
+							"host": [
+								"{{deployed_url}}"
+							],
+							"path": [
+								"predict",
+								"batch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{deployed_url}}/api/predictions/today",
+							"host": [
+								"{{deployed_url}}"
+							],
+							"path": [
+								"api",
+								"predictions",
+								"today"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Metrics",
+			"item": [
+				{
+					"name": "metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/metrics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": ""
+		},
+		{
+			"key": "deployed_url",
+			"value": ""
+		}
+	]
+}

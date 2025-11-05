@@ -2,7 +2,7 @@ name: Daily Admin Report - Railway Integration
 
 on:
   schedule:
-    - cron: '0 23 * * *'  # 11 PM UTC daily
+    - cron: '40 16 * * *'  # 11 PM UTC daily for now update to 4:40
   workflow_dispatch:  # Manual trigger
 
 jobs:
